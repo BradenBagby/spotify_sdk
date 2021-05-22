@@ -39,6 +39,47 @@ public class SwiftSpotifySdkPlugin: NSObject, FlutterPlugin {
         }
 
         switch call.method {
+        case SpotfySdkConstants.methodGetPlaylist:
+        guard let swiftArguments = call.arguments as? [String:Any] else {
+            result(FlutterError(code: "Argument Error", message: "Client ID is not set", details: nil))
+            return
+        }
+        
+        let accessToken: String? = swiftArguments[SpotfySdkConstants.paramAccessToken] as? String
+
+        let header =  ["Accept":"application/json",
+                       "Content-Type":"application/json",
+                       "Authorization":"Bearer \(accessToken!)"]
+        
+        let urlString = "https://api.spotify.com/v1/me/tracks?offset=0&limit=50"
+        
+        let url = URL(string: urlString)
+
+        var urlRequest = URLRequest(url: url!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10)
+        urlRequest.allHTTPHeaderFields = header
+        urlRequest.httpMethod = "GET"
+        URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+                    if let error = error {
+                        print("ERROR!!!!")
+                        print(error)
+                    } else if let data = data ,let responseCode = response as? HTTPURLResponse {
+                        do {
+                               
+                            guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else {
+                                   print("ERROR! parsing json")
+                                return
+                                  }
+                                  print(json)
+                              }  catch let error as NSError {
+                                  print(error.debugDescription)
+                              }
+                        print(data);
+                        
+                        }
+                     
+                    }
+                .resume()
+        break
         case SpotfySdkConstants.methodConnectToSpotify:
             guard let swiftArguments = call.arguments as? [String:Any],
                   let clientID = swiftArguments[SpotfySdkConstants.paramClientId] as? String,

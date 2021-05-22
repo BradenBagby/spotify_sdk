@@ -31,6 +31,7 @@ class _HomeState extends State<Home> {
   bool _loading = false;
   bool _connected = false;
   final Logger _logger = Logger();
+  String? myToken;
 
   CrossfadeState? crossfadeState;
 
@@ -78,10 +79,25 @@ class _HomeState extends State<Home> {
                   child: const Icon(Icons.settings_remote),
                 ),
                 TextButton(
-                  onPressed: getAuthenticationToken,
+                  onPressed: () async {
+                    final token = await getAuthenticationToken();
+                    setState(() {
+                      myToken = token;
+                    });
+                  },
                   child: const Text('get auth token '),
                 ),
               ],
+            ),
+            Center(
+              child: ElevatedButton(
+                child: Text("Get Playlists"),
+                onPressed: myToken != null
+                    ? () {
+                        SpotifySdk.getPlaylists(spotifyToken: myToken!);
+                      }
+                    : null,
+              ),
             ),
             const Divider(),
             const Text('Player State', style: TextStyle(fontSize: 16)),
@@ -389,6 +405,7 @@ class _HomeState extends State<Home> {
           scope: 'app-remote-control, '
               'user-modify-playback-state, '
               'playlist-read-private, '
+              'user-library-read, '
               'playlist-modify-public,user-read-currently-playing');
       setStatus('Got a token: $authenticationToken');
       return authenticationToken;

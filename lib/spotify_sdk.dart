@@ -421,6 +421,18 @@ class SpotifySdk {
     }
   }
 
+//TOOD: where is token stored. just use that
+  static Future<dynamic> getPlaylists({required String spotifyToken}) async {
+    try {
+      final res = await _channel.invokeMethod(
+          MethodNames.getPlaylists, {ParamNames.accessToken: spotifyToken});
+      return res;
+    } on Exception catch (e) {
+      _logException(MethodNames.removeFromLibrary, e);
+      rethrow;
+    }
+  }
+
   /// Gets the [Capabilities] of the current user
   ///
   /// Throws a [PlatformException] getting the capability failed

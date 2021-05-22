@@ -84,6 +84,9 @@ class MethodNames {
   /// method name for [removeFromLibrary]
   static const String removeFromLibrary = 'removeFromLibrary';
 
+  /// method name for [getPlaylists]
+  static const String getPlaylists = 'getPlaylists';
+
   /// method name for [getCapabilities]
   static const String getCapabilities = 'getCapabilities';
 

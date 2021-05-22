@@ -23,6 +23,7 @@ public class SpotfySdkConstants
     //user api
     public static let methodAddToLibrary = "addToLibrary"
     public static let methodRemoveFromLibrary = "removeFromLibrary"
+    public static let methodGetPlaylist = "getPlaylists";
 
     //images api
     public static let methodGetImage = "getImage"
